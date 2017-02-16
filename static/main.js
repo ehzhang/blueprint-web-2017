@@ -37,6 +37,10 @@ var mainState = {
     // Pt 2: Rotation
     this.bird.anchor.setTo(-0.2, 0.5);
 
+    // Die pls
+    this.bird.checkWorldBounds = true;
+    this.bird.events.onOutOfBounds.add(this.die, this);
+
     // Add physics to the bird
     game.physics.arcade.enable(this.bird);
 
@@ -52,10 +56,6 @@ var mainState = {
 
   update: function() {
     // Called 60x per second
-    if (this.bird.y < 0 || this.bird.y > 490) {
-      this.endGame();
-    }
-
     // Pt 2: Angle
     if (this.bird.angle < 20) {
       this.bird.angle += 1;
@@ -94,6 +94,11 @@ var mainState = {
 
   },
 
+  die: function() {
+    this.hitPipe();
+    this.endGame();
+  },
+
   addOnePipe: function(x, y) {
     var pipe = game.add.sprite(x, y, 'pipe');
 
@@ -124,6 +129,7 @@ var mainState = {
     // TODO: FOR YOU!
     // The game is over!!
     // What can you do with this.score?
+    alert('YOU LOST! You scored: ' + this.score);
   },
 };
 
