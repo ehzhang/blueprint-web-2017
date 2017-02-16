@@ -1,6 +1,10 @@
 <html>
   <title> FlappyPrint </title>
   <head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous">
+    </script>
     <script src="/static/phaser.min.js"></script>
     <script src="/static/main.js"></script>
   </head>
@@ -8,25 +12,4 @@
     <h1> Hello Blueprint! </h1>
     <button id="submit-button">Click me</Button>
   </body>
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous">
-  </script>
-  <script>
-    $(document).ready(function(){
-      $("#submit-button").click(function(){
-        $.ajax({
-          url: "/scores",
-          type: "POST",
-          data: '{"name": "Bloop", "score": 10}',
-          dataType: "json",
-          contentType: "application/json"
-        })
-        .done(function (data) {
-          // TODO update leaderboard
-          console.log(data);
-        })
-      });
-    });
-  </script>
 </html>
