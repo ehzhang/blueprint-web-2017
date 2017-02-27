@@ -5,18 +5,21 @@
    * http://www.lessmilk.com/tutorial/flappy-bird-phaser-2
    */
 
+  // Global score
+  var GAME_SCORE = 0;
+
   var mainState = {
     preload: function() {
-      // Where we load the images + sounds
-      game.load.image('bird', '/static/assets/bird.png');
-      game.load.image('pipe', '/static/assets/pipe.png');
+      // In preload, we load assets, like images and sounds.
+      game.load.image('bird', '/static/assets/bird2.png');
+      game.load.image('pipe', '/static/assets/pipe2.png');
 
       // Sound!!
       game.load.audio('jump', '/static/assets/jump.wav');
     },
 
     create: function() {
-      // Load the Jump Sound
+      // Add the jump sound
       this.jumpSound = game.add.audio('jump');
 
       // Scoring
@@ -24,21 +27,21 @@
       this.labelScore = game.add.text(20, 20, "0",
         { font: "30px Arial", fill: "#ffffff" });
 
-      // Create a group
+      // Create a group of items
       this.pipes = game.add.group();
 
       // Set up the game
-      game.stage.backgroundColor = '#71c5cf';
+      game.stage.backgroundColor = '#217acc';
 
       // Set the physics system
       game.physics.startSystem(Phaser.Physics.ARCADE);
 
       // Display the bird at position x=100, y=245
       this.bird = game.add.sprite(100, 245, 'bird');
-      // Pt 2: Rotation
+      // Set the anchor for the bird's axis of rotation.
       this.bird.anchor.setTo(-0.2, 0.5);
 
-      // Die pls
+      // When the bird goes out of the game bounds, it should die.
       this.bird.checkWorldBounds = true;
       this.bird.events.onOutOfBounds.add(this.die, this);
 
@@ -57,12 +60,12 @@
     },
 
     update: function() {
-      // Called 60x per second
-      // Pt 2: Angle
+      // Code in this update function is called 60x a second.
       if (this.bird.angle < 20) {
         this.bird.angle += 1;
       }
 
+      // If the bird collides with the pipe, call the hitPipe function.
       game.physics.arcade.overlap(
         this.bird, this.pipes, this.hitPipe, null, this);
     },
@@ -78,28 +81,32 @@
     },
 
     jump: function() {
-      // Pt 2: Death
+      // Birds can't jump if they dead
       if (this.bird.alive === false) {
         return;
       }
 
+      // Jump the bird!
       this.jumpSound.play();
       this.bird.body.velocity.y = -350;
 
-      // Pt 2: Jump Angle
+      // When the bird jumps, add an animation to rotate it.
       var animation = game.add.tween(this.bird);
       game.add.tween(this.bird).to({angle: -20}, 100).start();
     },
 
     hitPipe: function() {
+      // Don't bother checking hit pipe if the bird is already dead.
       if (this.bird.alive === false) {
         return;
       }
 
       this.bird.alive = false;
 
+      // Remove the timer to stop creating more pipes.
       game.time.events.remove(this.timer);
 
+      // Stop the pipes
       this.pipes.forEach(function(p) {
         p.body.velocity.x = 0;
       }, this);
@@ -107,6 +114,7 @@
     },
 
     die: function() {
+      // Bye bye birdy
       this.hitPipe();
       this.endGame();
     },
@@ -137,32 +145,54 @@
       }
     },
 
+    restartGame: function() {
+      this.gameStarted = false;
+      game.state.start('main');
+    },
+
     endGame: function() {
       // TODO: FOR YOU!
       // The game is over!!
       // What can you do with this.score?
-      alert('YOU LOST! You scored: ' + this.score);
+
+      // Set the game score
+      $('#game-score').text(this.score);
+
+      GAME_SCORE = this.score;
     },
   };
 
-  var game = new Phaser.Game(400, 490);
+  var game = new Phaser.Game(400, 490, Phaser.AUTO, 'game');
 
   game.state.add('main', mainState);
 
   game.state.start('main');
 
   $(document).ready(function(){
+    $('#restart-button').click(function(){
+      game.state.states.main.restartGame();
+    });
     $("#submit-button").click(function(){
       $.ajax({
         url: "/scores",
         type: "POST",
-        data: '{"name": "Bloop", "score": 10}',
+        data: JSON.stringify({
+          name: $('#name').val(),
+          score: GAME_SCORE
+        }),
         dataType: "json",
         contentType: "application/json"
       })
       .done(function (data) {
         // TODO update leaderboard
         console.log(data);
+
+        var boardContent = data.scores.map(function(score){
+          return "<li><div class='name'>" + score[0] + "</div><div class='score'>" + score[1] + "</div></li>";
+        }).join('');
+
+        $('.leaderboard .scores').html(boardContent);
+
       });
     });
   });

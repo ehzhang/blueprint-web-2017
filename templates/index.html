@@ -7,9 +7,27 @@
     </script>
     <script src="/static/phaser.min.js"></script>
     <script src="/static/main.js"></script>
+
+    <link href="/static/style.css" rel="stylesheet">
   </head>
   <body>
-    <h1> Hello Blueprint! </h1>
-    <button id="submit-button">Click me</Button>
+    <div class="container">
+      <div class="game-container">
+        <div id="game"></div>
+        <p>
+          Your score: <span id="game-score"></span>
+        </p>
+        <input id="name" type="text" placeholder="Your name">
+        <button class="fancy" id="submit-button">Submit</button>
+        <br>
+        <br>
+        <button class="fancy green" id="restart-button">Restart Game</Button>
+      </div>
+
+      <div class="leaderboard">
+        <h1> Leaderboard </h1>
+        <ol class="scores"></ol>
+      </div>
+    </div>
   </body>
 </html>
