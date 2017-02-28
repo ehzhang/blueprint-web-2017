@@ -44,7 +44,6 @@ def home():
 @app.route("/scores", methods=["POST"])
 def scores():
     # Extract data from request
-    print "here"
     print request.json
     name = request.json["name"]
     score = request.json["score"]
