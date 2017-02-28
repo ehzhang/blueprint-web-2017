@@ -167,4 +167,9 @@
   game.state.add('main', mainState);
 
   game.state.start('main');
+  $(document).ready(function(){
+    $('#restart-button').click(function(){
+      game.state.states.main.restartGame();
+    });
+  });
 })();
