@@ -32,6 +32,9 @@ class Leaderboard:
             self.scores.pop(self.capacity)
 
 leaderboard = Leaderboard()
+leaderboard.submit_score("Beyonce", 5)
+leaderboard.submit_score("Taylor", 4)
+leaderboard.submit_score("Selena", 8)
 
 ###################################
 # Routes
@@ -39,16 +42,7 @@ leaderboard = Leaderboard()
 
 @app.route("/")
 def home():
-    return render_template("index.html")
-
-@app.route("/scores", methods=["POST"])
-def scores():
-    # Extract data from request
-    print request.json
-    name = request.json["name"]
-    score = request.json["score"]
-    leaderboard.submit_score(name, score)
-    return json.dumps({"status": "OK", "scores": leaderboard.scores})
+    return render_template("index.html", scores=leaderboard.scores)
 
 if __name__ == "__main__":
     app.run()
