@@ -184,9 +184,6 @@
         contentType: "application/json"
       })
       .done(function (data) {
-        // TODO update leaderboard
-        console.log(data);
-
         var boardContent = data.scores.map(function(score){
           return "<li><div class='name'>" + score[0] + "</div><div class='score'>" + score[1] + "</div></li>";
         }).join('');
