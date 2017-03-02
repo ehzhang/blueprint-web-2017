@@ -12,7 +12,7 @@ import json
 ######################################
 # App initialization
 #####################################
-app = Flask(__name__)
+app = Flask("flappy bird")
 
 ####################################
 # Leaderboard
