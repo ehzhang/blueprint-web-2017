@@ -156,9 +156,7 @@
       // What can you do with this.score?
 
       // Set the game score
-      $('#game-score').text(this.score);
-
-      GAME_SCORE = this.score;
+      setScore(this.score);
     },
   };
 
@@ -167,6 +165,11 @@
   game.state.add('main', mainState);
 
   game.state.start('main');
+
+  function setScore(score) {
+    $('#game-score').text(score);
+    GAME_SCORE = score;
+  }
 
   $(document).ready(function(){
     $('#restart-button').click(function(){
@@ -189,6 +192,8 @@
         }).join('');
 
         $('.leaderboard .scores').html(boardContent);
+
+        setScore(0);
 
       });
     });
